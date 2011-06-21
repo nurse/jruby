@@ -52,14 +52,14 @@ fi
 
 JRUBY_OPTS_SPECIAL="--ng" # space-separated list of special flags
 unset JRUBY_OPTS_TEMP
-function process_special_opts {
+process_special_opts() {
     case $1 in
         --ng) nailgun_client=true;;
         *) break;;
     esac
 }
-for opt in ${JRUBY_OPTS[@]}; do
-    for special in ${JRUBY_OPTS_SPECIAL[@]}; do
+for opt in ${JRUBY_OPTS}; do
+    for special in ${JRUBY_OPTS_SPECIAL}; do
         if [ $opt != $special ]; then
             JRUBY_OPTS_TEMP="${JRUBY_OPTS_TEMP} $opt"
         else
@@ -116,10 +116,10 @@ if [ "$JRUBY_PARENT_CLASSPATH" != "" ]; then
 else
     # add other jars in lib to CP for command-line execution
     for j in "$JRUBY_HOME"/lib/*.jar; do
-        if [ "$j" == "$JRUBY_HOME"/lib/jruby.jar ]; then
+        if [ "$j" = "$JRUBY_HOME"/lib/jruby.jar ]; then
           continue
         fi
-        if [ "$j" == "$JRUBY_HOME"/lib/jruby-complete.jar ]; then
+        if [ "$j" = "$JRUBY_HOME"/lib/jruby-complete.jar ]; then
           continue
         fi
         if [ "$CP" ]; then
@@ -242,7 +242,7 @@ do
 done
 
 # Force file.encoding to UTF-8 when on Mac, since Apple JDK defaults to MacRoman (JRUBY-3576)
-if [[ -z "$JAVA_ENCODING" ]]; then
+if [ -z "$JAVA_ENCODING" ]; then
   java_args="${java_args} -Dfile.encoding=UTF-8"
 fi
 
